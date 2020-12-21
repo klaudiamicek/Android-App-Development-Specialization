@@ -20,7 +20,6 @@ public class Building {
     }
 
     //getters
-
     public int getLength() {
         return mLength;
     }
