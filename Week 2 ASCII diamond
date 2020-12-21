@@ -1,0 +1,139 @@
+package mooc.vandy.java4android.diamonds.logic;
+
+import mooc.vandy.java4android.diamonds.ui.OutputInterface;
+
+/**
+ * This is where the logic of this App is centralized for this assignment.
+ * <p>
+ * The assignments are designed this way to simplify your early
+ * Android interactions.  Designing the assignments this way allows
+ * you to first learn key 'Java' features without having to beforehand
+ * learn the complexities of Android.
+ */
+public class Logic
+       implements LogicInterface {
+    /**
+     * This is a String to be used in Logging (if/when you decide you
+     * need it for debugging).
+     */
+    public static final String TAG = Logic.class.getName();
+
+    /**
+     * This is the variable that stores our OutputInterface instance.
+     * <p>
+     * This is how we will interact with the User Interface [MainActivity.java].
+     * <p>
+     * It is called 'out' because it is where we 'out-put' our
+     * results. (It is also the 'in-put' from where we get values
+     * from, but it only needs 1 name, and 'out' is good enough).
+     */
+    private OutputInterface mOut;
+
+    /**
+     * This is the constructor of this class.
+     * <p>
+     * It assigns the passed in [MainActivity] instance (which
+     * implements [OutputInterface]) to 'out'.
+     */
+    public Logic(OutputInterface out){
+        mOut = out;
+    }
+
+    /**
+     * This is the method that will (eventually) get called when the
+     * on-screen button labeled 'Process...' is pressed.
+     */
+    public void process(int size) {
+
+        // TODO -- add your code here
+
+        //prints top line starting with +, size*2 number of dashes, and +
+        mOut.print("+");
+        for(int i=1;i<=(2*size);i++) {
+            mOut.print("-");}
+        mOut.print("+");
+
+
+        // printing top triangle
+        for(int i=1;i<size;i++) {
+            mOut.print("\n");
+            mOut.print("|");
+
+            //prints spaces in each top triangle row after "|" (number up to size-i starting with 1)
+            for(int j=1;j<=(size-i);j++) {
+                mOut.print(" ");}
+
+            mOut.print("/");
+
+
+            //prints "-" and "=" lines for top triangle (number up to 2*(i-1))
+            for(int z=1;z<=(2*(i-1));z++)
+            {
+                //if line number is even, prints "-" and if odd then "="
+                if(i%2==0)
+                    mOut.print("-");
+                else
+                    mOut.print("=");
+            }
+
+            mOut.print("\\");
+            //prints spaces after "\"(for each row of top triangle)
+            for(int j=1;j<=(size-i);j++){
+                mOut.print(" ");}
+            mOut.print("|");
+        }
+
+
+        //prints middle line (after top triangle)
+        mOut.print("\n");
+        mOut.print("|");
+        mOut.print("<");
+
+        for(int j=1;j<=(2*(size-1));j++)
+        {
+            //if size is even middle line has "-" and if odd then "="
+            if(size%2==0)
+                mOut.print("-");
+            else
+                mOut.print("=");
+        }
+
+        mOut.print(">");
+        mOut.print("|");
+
+
+        //prints bottom triangle
+        for(int i=1;i<size;i++) {
+            mOut.print("\n");
+            mOut.print("|");
+            //prints spaces before "\" (number up to i starting with 1), then "\"(for each row of bottom triangle)
+            for (int j = 1; j <= i; j++)
+                mOut.print(" ");
+            mOut.print("\\");
+
+            //prints "-" and "=" lines for bottom triangle (number up to 2*(size-i-1))
+            for (int z=1;z<=(2*(size-i-1));z++) {
+                if ((size + i) % 2 == 0)
+                    mOut.print("-");
+                else
+                    mOut.print("=");
+            }
+
+            //prints "/", then number of spaces (number up to i), then "|"(for each row of bottom triangle)
+            mOut.print("/");
+            for (int y = 1; y <= i; y++)
+                mOut.print(" ");
+            mOut.print("|");
+        }
+
+        mOut.print("\n");
+
+
+        //prints bottom line starting with +, size*2 number of dashes, and +
+        mOut.print("+");
+        for(int i=1;i<=(2*size);i++)
+            mOut.print("-");
+        mOut.print("+");
+
+    }
+}
