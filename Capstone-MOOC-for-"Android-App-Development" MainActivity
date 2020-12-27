@@ -1,0 +1,109 @@
+
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class MainActivity extends AppCompatActivity {
+//news api
+    private static final String API = "http://newsapi.org/v2/top-headlines?country=us&category=technology&apiKey=497b7f027f87483c8c49b4af935b6fb3";
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<String> articles = new ArrayList();
+    private Adapter adapter;
+    ListView listNews;
+
+    //creating ArrayList from HashMap, list of data
+    ArrayList<HashMap<String, String>> dataList = new ArrayList();
+    static final String AUTHOR = "Author";
+    static final String TITLE = "Title";
+    static final String DESCRIPTION = "Description";
+    static final String URL = "Url";
+    static final String URLTOIMAGE = "Url to image";
+    static final String PUBLISHDATE = "Publish date";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        setTitle("News");
+        listNews = findViewById(R.id.listNews);
+
+    }
+
+
+        public void onPostExecute(String xml) {
+            //if not empty
+            if (!xml.isEmpty()) {
+
+                try {
+                    //creates object (file format) to store and transmit data objects of array data types
+                    JSONObject jsonResponse = new JSONObject(xml);
+                    JSONArray jsonArray = jsonResponse.optJSONArray("items");
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        //creates hashmap and inserts mappings into it
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(AUTHOR, jsonObject.optString(AUTHOR));
+                        map.put(TITLE, jsonObject.optString(TITLE));
+                        map.put(DESCRIPTION, jsonObject.optString(DESCRIPTION));
+                        map.put(URL, jsonObject.optString(URL));
+                        map.put(URLTOIMAGE, jsonObject.optString(URLTOIMAGE));
+                        map.put(PUBLISHDATE, jsonObject.optString(PUBLISHDATE));
+                        dataList.add(map);
+                    }
+                } catch (JSONException e) {
+                    //displays "Error" message
+                    Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                }
+
+                RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.this, dataList) {
+                    @NonNull
+                    @Override
+                    public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                        return null;
+                    }
+
+                    @Override
+                    public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
+
+                    }
+
+                    @Override
+                    public Cursor query(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+                        return null;
+                    }
+                };
+                listNews.setAdapter((ListAdapter) adapter);
+
+                listNews.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        //creates intent and passes information (url, position)
+                        Intent intent = new Intent(MainActivity.this, WebIntentService.class);
+                        intent.putExtra("url", dataList.get(+position).get(URL));
+                        startActivity(intent);
+                    }
+                });
+
+            } else {
+                //xml.isEmpty() so no news, displays "No news"
+                Toast.makeText(getApplicationContext(), "No news", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
