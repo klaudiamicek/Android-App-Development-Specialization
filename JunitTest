@@ -1,0 +1,31 @@
+import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+
+
+
+public class JunitTest {
+    //creates MainActivity object and asserts false if xml empty
+    public final MainActivity articles = new MainActivity();
+    @Test
+    public void ifEmpty() throws Exception {
+        assertFalse(articles.MainActivity.onPostExecute("")); }
+
+
+
+public class AppTest {
+
+    private MainActivity mainActivity ;
+
+    //before test
+    public void setUp() throws Exception {
+        mainActivity = null;
+    }
+
+    //after test
+    public void tearDown() throws Exception {
+        mainActivity = null;
+    }
+
+
+
+}}
